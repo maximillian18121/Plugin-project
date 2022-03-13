@@ -1,0 +1,65 @@
+import React,{useState,useEffect} from 'react'
+import {getDocs,collection,updateDoc,doc, increment,query, OrderByDirection, orderBy} from "firebase/firestore";
+import {db} from "../Firebase-config";
+import "./Profile.css";
+import {auth} from "../Firebase-config";
+
+function Home() {
+
+  const [postLists, setPostLists] = useState([]);
+  const postsCollectionRef = collection(db,"Clients");
+
+
+  useEffect(()=>{
+    const q = query(postsCollectionRef,orderBy("Likes"));
+    const getposts = async() =>{
+      const data =  await getDocs(q);
+      setPostLists(data.docs.map((doc)=>({
+        ...doc.data(),id:doc.id
+      })));
+    };
+    getposts();
+    console.log(postLists);
+  },[postLists.Likes]);
+
+  
+    const LikeFunction = async(id) =>{
+    const postDoc = doc(db,"Clients",id);
+    await updateDoc(postDoc,{
+      Likes : increment(-1)
+    })
+    window.location.reload();
+      }
+      const DisLikeFunction = async(id) =>{
+        const postDoc = doc(db,"Clients",id);
+        await updateDoc(postDoc,{
+          Likes : increment(1)
+        })
+        window.location.reload();
+          }
+      
+
+  return (
+    <div className='Homepage'>{postLists.map((post) =>{
+      return( <div className='card card-profile text-center'>
+      <img alt='' className='card-img-top' src='https://unsplash.it/340/160?image=354'/>
+      <div className='card-block'>
+        <img alt='' className='card-img-profile' src='https://unsplash.it/340/160?image=354'/>
+        <div className='card-title'>{post.  Name}</div>
+        <div className='card-title'>{post.Status}</div>
+        <div className="card-links">
+          <button type="submit" onClick={()=>{
+            LikeFunction(post.id)
+          }}>THUMBS UP</button>
+          <button type="submit" onClick={()=>{
+            DisLikeFunction(post.id)
+          }}>THUMBS DOWN</button>
+           <div> {-post.Likes}</div>
+        </div>
+      </div>
+    </div>)
+    })}</div>
+  )
+}
+
+export default Home

@@ -1,0 +1,15 @@
+.vh-100{
+    background-color: #508bfc;
+}
+.card shadow-2-strong{
+    border-radius: 1rem;
+}
+#google{
+    background-color: #dd4b39;
+}
+#anonymous{
+    background-color: #3b5998;
+}
+#out{
+    background-color: #12ee0b;
+}
