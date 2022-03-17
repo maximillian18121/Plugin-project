@@ -8,7 +8,7 @@ import {useNavigate} from "react-router-dom";
 import axios from "axios";
 import CreateProfile from "./CreateProfile";
 
-function Profile({isAuth},{data}) {
+function AnonymousProfile({isAuth}) {
 
   const [Name, setName] = useState("");
   const [Status, setStatus] = useState("");
@@ -16,39 +16,29 @@ function Profile({isAuth},{data}) {
   let navigate = useNavigate();
 
   const profileCollectionRefs = collection(db,"Clients");
-  const userCollectionRefs = collection(db,"User");
-  const [userLists, setUserLists] = useState([]);
+  const [data, setData] = useState([]);
 
-  const letEmail = auth.currentUser.email;
-
-  useEffect(()=>{
-    const q = query(userCollectionRefs,where("Email","==",letEmail));
-    const getposts = async() =>{
-      const data =  await getDocs(q);
-      setUserLists(data.docs.map((doc)=>({
-        ...doc.data(),id:doc.id
-      })));
-    };
-    getposts();
-    console.log(userLists);
-  },[userLists.Email]);
-
-
-  console.log(userLists);
+  useEffect(() =>{
+    const fetchData = async() =>{
+      const res = await axios.get('https://randomuser.me/api/')
+      .then((response)=>{
+        setData(response.data.results);
+        console.log(response.data.results);
+    })};
+    fetchData();
+  },[]);
+  
   let userName = "";
-  userLists.map((data)=>{
-    userName = data.Name;
-  })
-  
-  
+  let imgsrc = "";
+  console.log(data);
 
+ 
+ 
   /*const incrementLikes =async () =>{
     setLikes(Likes+1);
     };
   */
-
-
-  const createProfile = async() =>{
+  /*const createProfile = async() =>{
 
     if(isAuth && (auth.currentUser.displayName) != null){
       await addDoc(profileCollectionRefs,{
@@ -56,23 +46,39 @@ function Profile({isAuth},{data}) {
       });
       navigate("/");
     }
-  }
+  }*/
+
+
 
   return (
     <div className='card card-profile text-center'>
-  <img alt='' className='card-img-top' src='https://unsplash.it/340/160?image=354'/>
+      {data.map((info)=>{  userName = `${info.name.first} ${info.name.last}` ;
+      const createProfile = async() =>{
+
+        
+          await addDoc(profileCollectionRefs,{
+            Name:userName,Status,Likes
+          });
+          navigate("/");
+          console.log("hello");
+      
+      };
+       return (
+        <>
+         <img alt='' className='card-img-top' src='https://unsplash.it/340/160?image=354'/>
   <div className='card-block'>
-    <img alt='' className='card-img-profile' src='https://unsplash.it/340/160?image=354'/>
-    <div className='card-title'>{userName}</div> 
+    <img alt='' className='card-img-profile' src={info.picture.large}/>
+    <div className='card-title'>{`${info.name.first} ${info.name.last}` }</div> 
     <textarea className='card-title' placeholder="Update your Status" onChange={(event) => {
       setStatus(event.target.value);}}/>
     <div className="card-links">
       <Button type="primary" onClick={createProfile}>POST</Button>
     </div>
   </div>
+  </>)})}
 </div>
 
   );
 }
 
-export default Profile;
+export default AnonymousProfile;

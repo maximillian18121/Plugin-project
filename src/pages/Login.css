@@ -13,3 +13,8 @@
 #out{
     background-color: #12ee0b;
 }
+.fab{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}

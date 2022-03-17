@@ -63,3 +63,34 @@
   .card-profile .card-links .fa.fa-facebook:hover {
     color: #2d4474;
   }
+  .paginationBtn {
+    width: 80%;
+    height: 40px;
+    list-style: none;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .paginationBtn a {
+    padding: 10px;
+    margin: 8px;
+    border-radius: 5px;
+    border: 1px solid #2b2eff;
+    color: #2b2eff;
+    cursor: pointer;
+  }
+  
+  .paginationBtn a:hover {
+    color: white;
+    background-color: #2b2eff;
+  }
+  
+  .activeBtn a {
+    color: white;
+    background-color: #2b2eff;
+  }
+  
+  .disableBtn a {
+    color: grey;
+    background-color: grey;
+  }
